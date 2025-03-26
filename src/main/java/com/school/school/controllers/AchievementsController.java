@@ -4,9 +4,7 @@ import com.school.school.responses.SchoolResponse;
 import com.school.school.services.AchievementsServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 //WHY ? ACHIEVEMENT CONTROLLER IS SEPARATE API AND NOT WITH STUDENT API
@@ -26,4 +24,11 @@ public class AchievementsController {
         SchoolResponse response = achievementsServices.createAchievement(studentId, date, file);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
+    @GetMapping("api/v1/student/achievement/{studentId}")
+    public ResponseEntity<SchoolResponse> getAchievements(@PathVariable String studentId) {
+        SchoolResponse response = achievementsServices.getAchievements(studentId);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
 }

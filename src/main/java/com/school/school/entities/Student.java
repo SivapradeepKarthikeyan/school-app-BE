@@ -3,6 +3,8 @@ package com.school.school.entities;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "student")
 public class Student {
@@ -24,13 +26,21 @@ public class Student {
     private String studentClass;
     private String studentSchool;
 
-    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //Each student can have multiple attendance entries.
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private Attendance studentAttendance;
+    private List<Attendance> studentAttendance;
 
-    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //Each student can have multiple achievements entries.
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private Achievements studentAchievements;
+    private List<Achievements> studentAchievements;
+
+
+    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    //Each Student can have multiple leave entries.
+    private List<LeaveRequest> studentLeaveRequests;
+
 
     public String getStudentId() {
         return studentId;
@@ -72,19 +82,29 @@ public class Student {
         this.studentSchool = studentSchool;
     }
 
-    public Attendance getStudentAttendance() {
+    public List<Attendance> getStudentAttendance() {
         return studentAttendance;
     }
 
-    public void setStudentAttendance(Attendance studentAttendance) {
+    public void setStudentAttendance(List<Attendance> studentAttendance) {
         this.studentAttendance = studentAttendance;
     }
 
-    public Achievements getStudentAchievements() {
+    public List<Achievements> getStudentAchievements() {
         return studentAchievements;
     }
 
-    public void setStudentAchievements(Achievements studentAchievements) {this.studentAchievements = studentAchievements;}
+    public void setStudentAchievements(List<Achievements> studentAchievements) {
+        this.studentAchievements = studentAchievements;
+    }
+
+    public List<LeaveRequest> getStudentLeaveRequests() {
+        return studentLeaveRequests;
+    }
+
+    public void setStudentLeaveRequests(List<LeaveRequest> studentLeaveRequests) {
+        this.studentLeaveRequests = studentLeaveRequests;
+    }
 
     @Override
     public String toString() {
@@ -96,6 +116,7 @@ public class Student {
                 ", studentSchool='" + studentSchool + '\'' +
                 ", studentAttendance=" + studentAttendance +
                 ", studentAchievements=" + studentAchievements +
+                ", studentLeaveRequests=" + studentLeaveRequests +
                 '}';
     }
 }

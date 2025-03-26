@@ -1,5 +1,6 @@
 package com.school.school.services;
 
+import com.school.school.constants.Constants;
 import com.school.school.entities.Achievements;
 import com.school.school.entities.Student;
 import com.school.school.excelMigrators.services.AttendanceMigrationServices;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,44 +30,39 @@ public class AchievementsServices {
     Logger logger = LoggerFactory.getLogger(AchievementsServices.class);
 
     @Autowired
+    StudentRepository studentRepository;
+    @Autowired
     AchievementsRepository achievementsRepository;
 
-    @Autowired
-    StudentRepository studentRepository;
+
+    public SchoolResponse getAchievements(String studentId){
+        if(studentRepository.findById(studentId).isPresent()){
+            List<Achievements> achievementsList=achievementsRepository.findByStudentId(studentId);
+            return GeneralHelper.generateResponse(SUCCESS,ACHIEVEMENTS_FETCH_SUCCESS,200,achievementsList);
+        }
+        return GeneralHelper.generateResponse(SUCCESS,ACHIEVEMENTS_FETCH_SUCCESS,404,null);
+    }
 
     public SchoolResponse createAchievement(String studentId, String date, MultipartFile file) {
-        Optional<Achievements> optionalAchievements = achievementsRepository.findById(studentId);
-        try {
-            if (optionalAchievements.isPresent()) {
-                Achievements achievements = optionalAchievements.get();
-                //TODO :: Call cloud storage and save the user file and get the link.
-                String link = storeFileInCloud(date,file);
-                achievements.getAchievementsTrack().put(date, "");
-                return GeneralHelper.generateResponse(SUCCESS, ACHIEVEMENTS_SUCCESS, 200, link);
-            } else {
-                Optional<Student> optionalStudent = studentRepository.findById(studentId);
-                if (optionalStudent.isEmpty())
-                    return GeneralHelper.generateResponse(FAILED, ACHIEVEMENTS_FAILED, 404, null);
-
-                Student student = optionalStudent.get();
-                Achievements achievements=student.getStudentAchievements();
-                if(achievements==null){
-                    achievements=new Achievements(student,new HashMap<>());
-                    student.setStudentAchievements(achievements);
-                }
-
-                String link = storeFileInCloud(date,file);
-                achievements.getAchievementsTrack().put(date,link);
-
-                return GeneralHelper.generateResponse(SUCCESS, ACHIEVEMENTS_SUCCESS, 200, link);
+        if(GeneralHelper.checkAchievementType(file)){
+            Optional<Student> studentOptional=studentRepository.findById(studentId);
+            if(studentOptional.isPresent()) {
+                Achievements achievements=new Achievements(studentOptional.get(),date,"Test title",storeFileInCloud(date,file));
+                achievementsRepository.save(achievements);
+                return GeneralHelper.generateResponse(SUCCESS,ACHIEVEMENTS_SUCCESS,200,achievements);
+            }else {
+                return GeneralHelper.generateResponse(FAILED,ACHIEVEMENTS_FAILED,404,null);
             }
-        } catch (Exception e) {
-            logger.warn("\uD83E\uDDE8 "+e.getMessage());
-            return GeneralHelper.generateResponse(FAILED, ACHIEVEMENTS_FAILED, 500, e.getMessage());
         }
+        return GeneralHelper.generateResponse(FAILED,ACHIEVEMENTS_FAILED,400,null);
     }
 
     private String storeFileInCloud(String date,MultipartFile file){
-        return "https://www.qwertyuiopasdfghjklzxcvbnm,";
+       try {
+           return "https://www.qwertyuiopasdfghjklzxcvbnm,";
+       }catch (Exception e){
+           logger.error("Error in uploading file to cloud :: "+e.getMessage());
+           return " ";
+       }
     }
 }

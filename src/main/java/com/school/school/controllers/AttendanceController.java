@@ -1,7 +1,8 @@
 package com.school.school.controllers;
 
+
 import com.school.school.responses.SchoolResponse;
-import com.school.school.services.StudentServices;
+import com.school.school.services.AttendanceServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,14 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class StudentController {
-    @Autowired
-    StudentServices studentServices;
+public class AttendanceController {
 
-    //This will be called by student to get their profile.
-    @GetMapping("api/v1/student/{id}")
-    public ResponseEntity<SchoolResponse> getStudentByEmail(@PathVariable String id){
-        SchoolResponse response=studentServices.getStudentById(id);
+    @Autowired
+    AttendanceServices attendanceServices;
+
+    @GetMapping("api/v1/student/attendance/{studentId}")
+    public ResponseEntity<SchoolResponse> getStudentAttendance(@PathVariable String studentId){
+        SchoolResponse response=attendanceServices.getStudentAttendance(studentId);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

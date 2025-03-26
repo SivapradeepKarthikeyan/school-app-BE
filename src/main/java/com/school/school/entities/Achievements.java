@@ -2,7 +2,7 @@ package com.school.school.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import java.util.Map;
+
 
 @Entity
 @Table(name = "achievements")
@@ -10,34 +10,25 @@ public class Achievements {
 
     public Achievements() {}
 
-    public Achievements(Student student, Map<String, String> achievementsTrack) {
+    public Achievements(Student student, String achievementDate, String achievementTitle, String achievementLink) {
         this.student = student;
-        this.achievementsTrack = achievementsTrack;
+        this.achievementDate = achievementDate;
+        this.achievementTitle = achievementTitle;
+        this.achievementLink = achievementLink;
     }
 
-    @Id
-    @Column(name = "student_id")
-    private String studentId;
-
-    @MapsId
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "student_id")
     @JsonBackReference
     private Student student;
 
-    @ElementCollection
-    @CollectionTable(name = "achievements_track", joinColumns = @JoinColumn(name = "student_id"))
-    @MapKeyColumn(name = "date")
-    @Column(name = "achievement_posted")
-    private Map<String, String> achievementsTrack;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String achievementId;
+    private String achievementDate;
+    private String achievementTitle;
+    private String achievementLink;
 
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
-    }
 
     public Student getStudent() {
         return student;
@@ -45,25 +36,48 @@ public class Achievements {
 
     public void setStudent(Student student) {
         this.student = student;
-        if (student != null) {
-            this.studentId = student.getStudentId();
-        }
     }
 
-    public Map<String, String> getAchievementsTrack() {
-        return achievementsTrack;
+    public String getAchievementId() {
+        return achievementId;
     }
 
-    public void setAchievementsTrack(Map<String, String> achievementsTrack) {
-        this.achievementsTrack = achievementsTrack;
+    public void setAchievementId(String achievementId) {
+        this.achievementId = achievementId;
+    }
+
+    public String getAchievementDate() {
+        return achievementDate;
+    }
+
+    public void setAchievementDate(String achievementDate) {
+        this.achievementDate = achievementDate;
+    }
+
+    public String getAchievementTitle() {
+        return achievementTitle;
+    }
+
+    public void setAchievementTitle(String achievementTitle) {
+        this.achievementTitle = achievementTitle;
+    }
+
+    public String getAchievementLink() {
+        return achievementLink;
+    }
+
+    public void setAchievementLink(String achievementLink) {
+        this.achievementLink = achievementLink;
     }
 
     @Override
     public String toString() {
         return "Achievements{" +
-                "studentId='" + studentId + '\'' +
-                ", student=" + (student != null ? student.getStudentId() : "null") +
-                ", achievementsTrack=" + achievementsTrack +
+                "student=" + student +
+                ", achievementId='" + achievementId + '\'' +
+                ", achievementDate='" + achievementDate + '\'' +
+                ", achievementTitle='" + achievementTitle + '\'' +
+                ", achievementLink='" + achievementLink + '\'' +
                 '}';
     }
 }

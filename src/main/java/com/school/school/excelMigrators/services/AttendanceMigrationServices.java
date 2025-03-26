@@ -3,6 +3,7 @@ package com.school.school.excelMigrators.services;
 import com.school.school.entities.Attendance;
 import com.school.school.entities.Student;
 import com.school.school.excelMigrators.helpers.MigrationHelper;
+import com.school.school.repositories.AttendanceRepository;
 import com.school.school.repositories.StudentRepository;
 import com.school.school.helpers.GeneralHelper;
 import com.school.school.responses.SchoolResponse;
@@ -35,6 +36,8 @@ public class AttendanceMigrationServices {
 
     @Autowired
     StudentRepository studentRepository;
+    @Autowired
+    AttendanceRepository attendanceRepository;
 
     public SchoolResponse markAttendance(String date, MultipartFile studentsAttendanceExcelFile) {
         if (MigrationHelper.isStudentsAttendanceExcelValid(studentsAttendanceExcelFile)) {
@@ -48,7 +51,7 @@ public class AttendanceMigrationServices {
                 int dateColumnIndex =getDateColumn(headerRow,date);
 
                 if (dateColumnIndex == -1) {
-                    logger.warn("\uD83D\uDD3A Date column not found in the Excel file: " + date);
+                    logger.error("\uD83D\uDD3A Date column not found in the Excel file: " + date);
                     return GeneralHelper.generateResponse(FAILED, "Date column not found", 400, null);
                 }
 
@@ -61,23 +64,18 @@ public class AttendanceMigrationServices {
                     Optional<Student> studentOptional = studentRepository.findByStudentEmail(studentEmail);
 
                     if (studentOptional.isEmpty()) {
-                        logger.info("🟨 Student not found to mark attendance :: " + studentEmail);
+                        logger.warn("Student not found to mark attendance :: " + studentEmail);
                         continue;
                     }
 
                     Student student = studentOptional.get();
-                    Attendance attendance = student.getStudentAttendance();
-                    if (attendance == null) {
-                        attendance = new Attendance(student, new HashMap<>());
-                        student.setStudentAttendance(attendance);
-                    }
 
-                    // Fetch attendance status from the found column
+                    // Fetch attendance status from the found column.
                     Cell attendanceCell = row.getCell(dateColumnIndex);
                     boolean isPresent =attendanceCell.getBooleanCellValue();
 
-                    //This overrides the attendance date because in hashmap not duplicate keys can be present.
-                    attendance.getAttendanceTrack().put(date, isPresent);
+                    Attendance attendance=new Attendance(student,date,isPresent);
+                    attendanceRepository.save(attendance);
 
                     logger.info("✅ Student attendance marked :: " + studentEmail + " " + date + " " + isPresent);
                 }

@@ -10,61 +10,85 @@ public class LeaveRequest {
 
     public LeaveRequest() {}
 
-    public LeaveRequest(Student student,String studentId, String leaveId, String leaveDate, String leaveReason, String teacherEmail) {
-        this.studentId = studentId;
-        this.leaveId = leaveId;
-        this.leaveDate = leaveDate;
-        this.leaveReason = leaveReason;
-        this.teacherEmail = teacherEmail;
+    public LeaveRequest(Student student, String studentLeaveRequestDate, String studentLeaveRequestDateReason, String studentClassTeacherEmail, String studentClassTeacherResponse) {
+        this.student = student;
+        this.studentLeaveRequestDate = studentLeaveRequestDate;
+        this.studentLeaveRequestReason = studentLeaveRequestDateReason;
+        this.studentClassTeacherEmail = studentClassTeacherEmail;
+        this.studentClassTeacherResponse = studentClassTeacherResponse;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    @JsonBackReference
+    private Student student;
 
-    private String studentId;
     @Id
-    private String leaveId;
-    private String leaveDate;
-    private String leaveReason;
-    private String teacherEmail;
+    @GeneratedValue(strategy=GenerationType.UUID)
+    private String studentLeaveRequestId;
 
+    private String studentLeaveRequestDate;
+    private String studentLeaveRequestReason;
+    private String studentClassTeacherEmail;
+    private String studentClassTeacherResponse;
 
-
-    public String getStudentId() {
-        return studentId;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
-    public String getLeaveId() {
-        return leaveId;
+    public String getLeaveRequestId() {
+        return studentLeaveRequestId;
     }
 
-    public void setLeaveId(String leaveId) {
-        this.leaveId = leaveId;
+    public void setLeaveRequestId(String leaveRequestId) {
+        this.studentLeaveRequestId = leaveRequestId;
     }
 
-    public String getLeaveDate() {
-        return leaveDate;
+    public String getStudentLeaveRequestDate() {
+        return studentLeaveRequestDate;
     }
 
-    public void setLeaveDate(String leaveDate) {
-        this.leaveDate = leaveDate;
+    public void setStudentLeaveRequestDate(String studentLeaveRequestDate) {
+        this.studentLeaveRequestDate = studentLeaveRequestDate;
     }
 
-    public String getLeaveReason() {
-        return leaveReason;
+    public String getStudentLeaveRequestReason() {
+        return studentLeaveRequestReason;
     }
 
-    public void setLeaveReason(String leaveReason) {
-        this.leaveReason = leaveReason;
+    public void setStudentLeaveRequestReason(String studentLeaveRequestDateReason) {
+        this.studentLeaveRequestReason = studentLeaveRequestDateReason;
     }
 
-    public String getTeacherEmail() {
-        return teacherEmail;
+    public String getStudentClassTeacherEmail() {
+        return studentClassTeacherEmail;
     }
 
-    public void setTeacherEmail(String teacherEmail) {
-        this.teacherEmail = teacherEmail;
+    public void setStudentClassTeacherEmail(String studentClassTeacherEmail) {
+        this.studentClassTeacherEmail = studentClassTeacherEmail;
+    }
+
+    public String getStudentClassTeacherResponse() {
+        return studentClassTeacherResponse;
+    }
+
+    public void setStudentClassTeacherResponse(String studentClassTeacherResponse) {
+        this.studentClassTeacherResponse = studentClassTeacherResponse;
+    }
+
+    @Override
+    public String toString() {
+        return "LeaveRequest{" +
+                "student=" + student +
+                ", leaveRequestId='" + studentLeaveRequestReason + '\'' +
+                ", studentLeaveRequestDate='" + studentLeaveRequestDate + '\'' +
+                ", studentLeaveRequestDateReason='" + studentLeaveRequestReason + '\'' +
+                ", studentClassTeacherEmail='" + studentClassTeacherEmail + '\'' +
+                ", studentClassTeacherResponse='" + studentClassTeacherResponse + '\'' +
+                '}';
     }
 }

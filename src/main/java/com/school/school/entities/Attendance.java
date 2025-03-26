@@ -2,7 +2,6 @@ package com.school.school.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import java.util.Map;
 
 @Entity
 @Table(name = "attendance")
@@ -10,34 +9,22 @@ public class Attendance {
 
     public Attendance() {}
 
-    public Attendance(Student student, Map<String, Boolean> attendanceTrack) {
+    public Attendance(Student student, String date, boolean isPresent) {
         this.student = student;
-        this.attendanceTrack = attendanceTrack;
+        this.date = date;
+        this.isPresent = isPresent;
     }
 
-    @Id //Creating the id
-    @Column(name = "student_id")
-    private String studentId;
-
-    @MapsId //Mapping the id with student
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "student_id")
     @JsonBackReference
     private Student student;
 
-    @ElementCollection
-    @CollectionTable(name = "attendance_track", joinColumns = @JoinColumn(name = "student_id"))
-    @MapKeyColumn(name = "date")
-    @Column(name = "is_present")
-    private Map<String, Boolean> attendanceTrack;
-
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String attendanceId;
+    private String date;
+    private boolean isPresent;
 
     public Student getStudent() {
         return student;
@@ -45,14 +32,39 @@ public class Attendance {
 
     public void setStudent(Student student) {
         this.student = student;
-        this.studentId = student.getStudentId();
     }
 
-    public Map<String, Boolean> getAttendanceTrack() {
-        return attendanceTrack;
+    public String getAttendanceId() {
+        return attendanceId;
     }
 
-    public void setAttendanceTrack(Map<String, Boolean> attendanceTrack) {
-        this.attendanceTrack = attendanceTrack;
+    public void setAttendanceId(String attendanceId) {
+        this.attendanceId = attendanceId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public boolean isPresent() {
+        return isPresent;
+    }
+
+    public void setPresent(boolean present) {
+        isPresent = present;
+    }
+
+    @Override
+    public String toString() {
+        return "Attendance{" +
+                "student=" + student +
+                ", attendanceId='" + attendanceId + '\'' +
+                ", date='" + date + '\'' +
+                ", isPresent=" + isPresent +
+                '}';
     }
 }
