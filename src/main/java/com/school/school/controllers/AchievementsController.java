@@ -20,14 +20,14 @@ public class AchievementsController {
     AchievementsServices achievementsServices;
 
     @PostMapping("api/v1/student/achievement")
-    public ResponseEntity<SchoolResponse> createAchievement(@RequestParam String studentId, @RequestParam String date, @RequestParam("file") MultipartFile file) {
-        SchoolResponse response = achievementsServices.createAchievement(studentId, date, file);
+    public ResponseEntity<SchoolResponse> createAchievement(@RequestParam String email, @RequestParam String date, @RequestParam("file") MultipartFile file) {
+        SchoolResponse response = achievementsServices.createAchievement(email, date, file);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    @GetMapping("api/v1/student/achievement/{studentId}")
-    public ResponseEntity<SchoolResponse> getAchievements(@PathVariable String studentId) {
-        SchoolResponse response = achievementsServices.getAchievements(studentId);
+    @GetMapping("api/v1/student/achievement/{email}")
+    public ResponseEntity<SchoolResponse> getAchievements(@PathVariable String email) {
+        SchoolResponse response = achievementsServices.getAchievements(email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

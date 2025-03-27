@@ -15,9 +15,9 @@ public class AttendanceController {
     @Autowired
     AttendanceServices attendanceServices;
 
-    @GetMapping("api/v1/student/attendance/{studentId}")
-    public ResponseEntity<SchoolResponse> getStudentAttendance(@PathVariable String studentId){
-        SchoolResponse response=attendanceServices.getStudentAttendance(studentId);
+    @GetMapping("api/v1/student/attendance/{email}")
+    public ResponseEntity<SchoolResponse> getStudentAttendance(@PathVariable String email){
+        SchoolResponse response=attendanceServices.getStudentAttendance(email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

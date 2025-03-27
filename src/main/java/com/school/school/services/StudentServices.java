@@ -18,9 +18,9 @@ public class StudentServices {
     @Autowired
     StudentRepository studentRepository;
 
-    public SchoolResponse getStudentById(String id){
+    public SchoolResponse getStudentByEmail(String email){
         try {
-            Optional<Student> studentOptional= studentRepository.findById(id);
+            Optional<Student> studentOptional= studentRepository.findByStudentEmail(email);
             return GeneralHelper.generateResponse(SUCCESS, STUDENT_FETCH_SUCCESS, 200, studentOptional.get());
         }catch (Exception e){
             return GeneralHelper.generateResponse(FAILED, STUDENT_FETCH_FAILED, 500, null);

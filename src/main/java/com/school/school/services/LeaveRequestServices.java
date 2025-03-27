@@ -40,9 +40,9 @@ public class LeaveRequestServices {
     }
 
 
-    public SchoolResponse postLeaveRequest(String studentId, LeaveRequestDTO leaveRequestDTO){
+    public SchoolResponse postLeaveRequest(String email, LeaveRequestDTO leaveRequestDTO){
         if(GeneralHelper.checkLeaveRequestDTO(leaveRequestDTO)){
-            Optional<Student> optionalStudent =studentRepository.findById(studentId);
+            Optional<Student> optionalStudent =studentRepository.findByStudentEmail(email);
             if(optionalStudent.isPresent()){
                 LeaveRequest leaveRequest=new LeaveRequest(optionalStudent.get(),leaveRequestDTO.getDate(),leaveRequestDTO.getReason(), leaveRequestDTO.getClassTeacherEmail(), null);
                 leaveRequestRepository.save(leaveRequest);

@@ -14,9 +14,9 @@ public class StudentController {
     StudentServices studentServices;
 
     //This will be called by student to get their profile.
-    @GetMapping("api/v1/student/{id}")
-    public ResponseEntity<SchoolResponse> getStudentByEmail(@PathVariable String id){
-        SchoolResponse response=studentServices.getStudentById(id);
+    @GetMapping("api/v1/student/{email}")
+    public ResponseEntity<SchoolResponse> getStudentByEmail(@PathVariable String email){
+        SchoolResponse response=studentServices.getStudentByEmail(email);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

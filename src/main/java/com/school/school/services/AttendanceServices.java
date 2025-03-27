@@ -1,6 +1,7 @@
 package com.school.school.services;
 
 import com.school.school.entities.Attendance;
+import com.school.school.entities.Student;
 import com.school.school.repositories.AttendanceRepository;
 import com.school.school.repositories.StudentRepository;
 import com.school.school.responses.SchoolResponse;
@@ -27,10 +28,11 @@ public class AttendanceServices {
     @Autowired
     AttendanceRepository attendanceRepository;
 
-    public SchoolResponse getStudentAttendance(String studentId) {
+    public SchoolResponse getStudentAttendance(String email) {
 
-        if (studentRepository.findById(studentId).isPresent()) {
-            List<Attendance> attendanceList = attendanceRepository.findByStudentId(studentId);
+        Optional<Student> optionalStudent = studentRepository.findByStudentEmail(email);
+        if (optionalStudent.isPresent()) {
+            List<Attendance> attendanceList = attendanceRepository.findByStudentId(optionalStudent.get().getStudentId());
             return new SchoolResponse(SUCCESS, STUDENT_ATTENDANCE_FETCH_SUCCESS, 200, attendanceList );
         }
         return new SchoolResponse(FAILED, STUDENT_ATTENDANCE_FETCH_FAILED, 404, null);

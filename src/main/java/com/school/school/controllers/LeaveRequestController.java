@@ -17,9 +17,9 @@ public class LeaveRequestController {
     LeaveRequestServices leaveRequestServices;
 
     //This will be called by student to request a leave.
-    @PostMapping("api/v1/student/leave-request/{studentId}")
-    public ResponseEntity<SchoolResponse> postLeaveRequest(@PathVariable String studentId,@RequestBody LeaveRequestDTO leaveRequestDTO) {
-        SchoolResponse response = leaveRequestServices.postLeaveRequest(studentId, leaveRequestDTO);
+    @PostMapping("api/v1/student/leave-request/{email}")
+    public ResponseEntity<SchoolResponse> postLeaveRequest(@PathVariable String email,@RequestBody LeaveRequestDTO leaveRequestDTO) {
+        SchoolResponse response = leaveRequestServices.postLeaveRequest(email, leaveRequestDTO);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
